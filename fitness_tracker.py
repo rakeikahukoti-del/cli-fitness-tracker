@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from datetime import datetime
 from collections import Counter
 
@@ -7,117 +8,148 @@ headers = ["date", "lift", "weight", "reps", "sets"]
 exercises = ["bench press", "deadlift", "squat"]
 
 
+def setup_database():
+    conn = sqlite3.connect("fitness_tracker.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS workouts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT,
+            lift TEXT,
+            weight INTEGER,
+            reps INTEGER,
+            sets INTEGER
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+
+def save_workout(date, lift, weight, reps, sets):
+    conn = sqlite3.connect("fitness_tracker.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO workouts (date, lift, weight, reps, sets)
+        VALUES (?, ?, ?, ?, ?)
+    """, (date, lift, weight, reps, sets))
+
+    conn.commit()
+    conn.close()
+
+
+
 def load_workouts():
+    conn = sqlite3.connect("fitness_tracker.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT date, lift, weight, reps, sets
+        FROM workouts
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
     workouts = []
 
-    with open(user_workout, "r") as file:
-        next(file)
+    for row in rows:
+        workouts.append({
+            "date": row[0],
+            "lift": row[1],
+            "weight": row[2],
+            "reps": row[3],
+            "sets": row[4],
+            "volume": row[2] * row[3] * row[4]
+        })
 
-        for line in file:
-            date, lift, weight, reps, sets = line.strip().split(",")
-
-            workouts.append({
-                "date": date,
-                "lift": lift,
-                "weight": int(weight),
-                "reps": int(reps),
-                "sets": int(sets),
-                "volume": int(weight) * int(reps) * int(sets)
-            })
-
-    
     return workouts
 
 
-
 def add_workout():
-    with open(user_workout, "a") as file:
-        if os.path.getsize(user_workout) == 0:
-            file.write(",".join(headers) + "\n")
+
+    while True:
+        print("--------------------------------")
+        print("ADDING NEW WORKOUT")
+        print("--------------------------------")
+        print("\nEnter new workout. Type 'done' to print summary\n")
 
         while True:
-            print("--------------------------------")
-            print("ADDING NEW WORKOUT")
-            print("--------------------------------")
-            print("\nEnter new workout. Type 'done' to print summary\n")
-
-            while True:
-                workout_date = input("Date (DD-MM-YYYY): ").strip()
-
-                if workout_date.lower() == "done":
-                    break
-
-                else:
-                    try:
-                        datetime.strptime(workout_date, "%d-%m-%Y")
-                        file.write(workout_date + ",")
-                        break
-
-                    except ValueError:
-                        print("Invalid date, try again\n")
+            workout_date = input("Date (DD-MM-YYYY): ").strip()
 
             if workout_date.lower() == "done":
-                print(f"\nCalculating summary...\n")
                 break
 
-            while True:
-                workout_lift = str(
-                    input("Lift (Bench Press, Deadlift, Squat): ")).lower().strip()
+            try:
+                datetime.strptime(workout_date, "%d-%m-%Y")
+                # file.write(workout_date + ",")
+                break
 
-                if workout_lift in exercises:
-                    file.write(workout_lift + ",")
+            except ValueError:
+                print("Invalid date, try again\n")
+
+        if workout_date.lower() == "done":
+            print(f"\nReturning to menu...\n")
+            break
+
+        while True:
+            workout_lift = str(input("Lift (Bench Press, Deadlift, Squat): ")).lower().strip()
+
+            if workout_lift in exercises:
+                # file.write(workout_lift + ",")
+                break
+
+            else:
+                print("Invalid option, try again\n")
+
+        while True:
+            try:
+                workout_weight = int(input("Weight (kg): "))
+
+                if (workout_weight > 0) and (workout_weight <= 400):
+                    # file.write(str(workout_weight) + ",")
                     break
 
                 else:
-                    print("Invalid option, try again\n")
+                    print("Invalid value, try again (1-400)\n")
 
-            while True:
-                try:
-                    workout_weight = int(input("Weight (kg): "))
+            except ValueError:
+                print("Please enter a valid value\n")
 
-                    if (workout_weight > 0) and (workout_weight <= 400):
-                        file.write(str(workout_weight) + ",")
-                        break
+        while True:
+            try:
+                workout_reps = int(input("Reps: "))
 
-                    else:
-                        print("Invalid value, try again (1-400)\n")
+                if (workout_reps > 0) and (workout_reps <= 100):
+                    # file.write(str(workout_reps) + ",")
+                    break
 
-                except ValueError:
-                    print("Please enter a valid value\n")
+                else:
+                    print("Invalid value, try again (1-100)\n")
 
-            while True:
-                try:
-                    workout_reps = int(input("Reps: "))
+            except ValueError:
+                print("Please enter a valid value\n")
 
-                    if (workout_reps > 0) and (workout_reps <= 100):
-                        file.write(str(workout_reps) + ",")
-                        break
+        while True:
+            try:
+                workout_sets = int(input("Sets: "))
 
-                    else:
-                        print("Invalid value, try again (1-100)\n")
+                if (workout_sets > 0) and (workout_sets <= 10):
+                    # file.write(str(workout_sets) + "\n")
+                    break
 
-                except ValueError:
-                    print("Please enter a valid value\n")
+                else:
+                    print("Invalid value, try again (1-10)\n")
 
-            while True:
-                try:
-                    workout_sets = int(input("Sets: "))
+            except ValueError:
+                print("Please enter a valid value\n")
 
-                    if (workout_sets > 0) and (workout_sets <= 10):
-                        file.write(str(workout_sets) + "\n")
-                        break
-
-                    else:
-                        print("Invalid value, try again (1-10)\n")
-
-                except ValueError:
-                    print("Please enter a valid value\n")
-
-            print("\nWorkout saved\n")
-
-    print("\n--------------------------------")
-    print("Workout has been saved")
-    print("--------------------------------\n")
+        save_workout(workout_date,workout_lift,workout_weight,workout_reps,workout_sets)
+        print("\nWorkout saved\n")
 
 
 
@@ -126,18 +158,20 @@ def view_workouts():
     print("PREVIOUS WORKOUTS")
     print("--------------------------------")
 
-    if os.path.getsize(user_workout) < 2:
+    workouts = load_workouts()
+
+    if len(workouts) == 0:
         print("\nNo workout recorded\n")
 
-    else:            
-        with open(user_workout, 'r') as file:
-            next(file)
+    else:
+        for w in workouts:
+            print(
+                f"\n{w['date']} | "
+                f"{w['lift'].title()} | "
+                f"{w['weight']}kg x {w['reps']} reps x {w['sets']} sets"
+            )
 
-            for line in file:
-                date, lift, weight, reps, sets = line.strip().split(",")
-
-                print(f"\n{date} | {lift.title()} | {weight}kg x {reps} reps x {sets} sets")
-            print("")
+        print("")
 
 
 
@@ -215,7 +249,21 @@ def view_summary():
 
         print("")
 
+
+def reset_workouts():
+    conn = sqlite3.connect("fitness_tracker.db")
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM workouts")
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='workouts'")
+
+    conn.commit()
+    conn.close()
+
+
 while True:
+    setup_database()
+
     print("--------------------------------")
     print("CLI FITNESS TRACKER")
     print("--------------------------------\n")
@@ -254,10 +302,10 @@ while True:
         print("RESETTING STATISTICS")
         print("--------------------------------")
 
-        user_input = input("\nAre you sure (yes/no): ").lower()
+        user_choice = input("\nAre you sure (yes/no): ").lower().strip()
 
-        if user_input == "yes":
-            open(user_workout, "w").close()
+        if user_choice == "yes":
+            reset_workouts()
             print("\nRESET SUCCESSFUL\n")
 
         else:
