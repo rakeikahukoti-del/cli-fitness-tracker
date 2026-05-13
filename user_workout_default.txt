@@ -1,6 +1,0 @@
-date,lift,weight,reps,sets
-25-04-2026,bench press,80,5,5
-25-04-2026,squat,120,5,5
-26-04-2026,deadlift,150,3,5
-27-04-2026,bench press,85,4,4
-28-04-2026,squat,125,3,5

@@ -3,7 +3,6 @@
 A simple Python command-line fitness tracker that lets users log workouts, view previous workouts, and generate training summarie
 
 
-
 ## Features
 
 - Add new workouts
@@ -20,7 +19,6 @@ A simple Python command-line fitness tracker that lets users log workouts, view 
 - Basic input validation
 
 
-
 ## Tech Used
 
 - Python
@@ -29,13 +27,11 @@ A simple Python command-line fitness tracker that lets users log workouts, view 
 - Command-line interface
 
 
-
 ## How to Run
 
 Make sure Python is installed
 
 Run: python3 fitness_tracker.py
-
 
 
 ## Workout Format
@@ -55,7 +51,6 @@ Supported lifts:
 * Deadlift
 
 
-
 ## Future Improvements
 
 * Add weekly progress summaries
@@ -64,6 +59,7 @@ Supported lifts:
 * Add charts and analytics
 * Build a React frontend
 * Turn into a full fitness dashboard
+
 
 
 
@@ -87,3 +83,36 @@ Supported lifts:
 - Cleaner output formatting
 - Helper function refactoring
 - Better code organisation
+
+
+
+
+## Week 3 Features
+
+
+### SQLite Database Integration
+
+- Replaced text-file storage with SQLite
+- Added database setup and connection helpers
+- Added SQL-based analytics queries
+- Added workout filtering using SQL WHERE clauses
+- Added grouped statistics using SQL aggregation
+
+
+### SQL Concepts Used
+
+- SELECT
+- INSERT
+- WHERE
+- GROUP BY
+- COUNT
+- SUM
+- MAX
+- ORDER BY
+
+
+### Architecture Improvements
+
+- Refactored into helper functions
+- Separated database logic from app logic
+- Improved maintainability and scalability
