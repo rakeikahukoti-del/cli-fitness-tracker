@@ -2,7 +2,6 @@
 
 A simple Python command-line fitness tracker that lets users log workouts, view previous workouts, and generate training summarie
 
-
 ## Features
 
 - Add new workouts
@@ -18,7 +17,6 @@ A simple Python command-line fitness tracker that lets users log workouts, view 
 - Reset workout data
 - Basic input validation
 
-
 ## Tech Used
 
 - Python
@@ -26,13 +24,11 @@ A simple Python command-line fitness tracker that lets users log workouts, view 
 - CSV-style text storage
 - Command-line interface
 
-
 ## How to Run
 
 Make sure Python is installed
 
 Run: python3 fitness_tracker.py
-
 
 ## Workout Format
 
@@ -50,7 +46,6 @@ Supported lifts:
 * Squat
 * Deadlift
 
-
 ## Future Improvements
 
 * Add weekly progress summaries
@@ -60,11 +55,7 @@ Supported lifts:
 * Build a React frontend
 * Turn into a full fitness dashboard
 
-
-
-
 ## Week 2 Features
-
 
 ### Workout Analytics
 
@@ -76,7 +67,6 @@ Supported lifts:
 - Most trained lift
 - Daily training breakdown
 
-
 ### Improvements
 
 - Structured workout loading
@@ -84,11 +74,7 @@ Supported lifts:
 - Helper function refactoring
 - Better code organisation
 
-
-
-
 ## Week 3 Features
-
 
 ### SQLite Database Integration
 
@@ -97,7 +83,6 @@ Supported lifts:
 - Added SQL-based analytics queries
 - Added workout filtering using SQL WHERE clauses
 - Added grouped statistics using SQL aggregation
-
 
 ### SQL Concepts Used
 
@@ -110,9 +95,29 @@ Supported lifts:
 - MAX
 - ORDER BY
 
-
 ### Architecture Improvements
 
 - Refactored into helper functions
 - Separated database logic from app logic
 - Improved maintainability and scalability
+
+## Week 4 Features
+
+### React Frontend
+
+- Built a Vite React frontend
+- Added workout form UI
+- Added workout list component
+- Added summary cards
+- Added lift filters
+- Added basic dashboard layout
+
+### React Concepts Used
+
+- Components
+- Props
+- useState
+- Event handling
+- Conditional rendering
+- List rendering with map
+- Basic derived state
