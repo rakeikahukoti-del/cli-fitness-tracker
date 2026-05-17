@@ -71,7 +71,7 @@ function WorkoutForm({ onAddWorkout }) {
             <div>
                 <label>Weight:  </label>
                 <input
-                type="number"
+                type="float"
                 name="weight"
                 value={formData.weight}
                 onChange={handleChange}
@@ -102,6 +102,7 @@ function WorkoutForm({ onAddWorkout }) {
             </div>
 
         </div>
+        
 
         <button type="submit" style={{ marginTop: "1rem" }}>
             Save Workout

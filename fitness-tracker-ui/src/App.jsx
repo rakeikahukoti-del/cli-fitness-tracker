@@ -4,13 +4,59 @@ import WorkoutList from "./components/WorkoutList"
 import SummaryCard from "./components/SummaryCard"
 import "./App.css"
 
+
 function App() {
   const [workouts, setWorkouts] = useState([])
 
   const [selectedLift, setSelectedLift] = useState("all")
 
+  function getPreviousMax(lift) {
+    const liftWorkouts = workouts.filter(
+      workout => workout.lift === lift
+    )
+
+    if (liftWorkouts.length === 0) {
+      return 0
+    }
+
+    return Math.max(
+      ...liftWorkouts.map(workout => workout.weight)
+    )
+  }
+
+  function getNextTarget(lift, weight) {
+    if (lift === "bench press") return weight + 2.5
+    if (lift === "squat") return weight + 5
+    if (lift === "deadlift") return weight + 5
+
+    return weight + 2.5
+  }
+
   function addWorkout(newWorkout) {
-    setWorkouts([...workouts, newWorkout])
+    const previousMax = getPreviousMax(newWorkout.lift)
+    const isPR = newWorkout.weight > previousMax
+
+    const improvement = isPR ? newWorkout.weight - previousMax : 0
+
+    const improvementPercent =
+      isPR && previousMax > 0
+        ? (improvement / previousMax) * 100
+        : 0
+
+    const nextTarget = isPR
+      ? getNextTarget(newWorkout.lift, newWorkout.weight)
+      : null
+
+    const workoutWithPR = {
+      ...newWorkout,
+      isPR,
+      previousMax,
+      improvement,
+      improvementPercent,
+      nextTarget
+    }
+
+    setWorkouts([...workouts, workoutWithPR])
   }
 
   const totalSessions = workouts.length

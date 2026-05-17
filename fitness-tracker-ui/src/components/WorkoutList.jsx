@@ -12,17 +12,30 @@ function WorkoutList({ workouts }) {
           <div
             key={index}
             style={{
-              border: "1px solid #ddd",
+              border: workout.isPR
+                ? "2px solid green"
+                : "1px solid #ddd",
               padding: "1rem",
               borderRadius: "10px"
             }}
           >
             <h3>{workout.lift}</h3>
             <p>Date: {workout.date}</p>
-            <p>
-              {workout.weight}kg × {workout.reps} reps × {workout.sets} sets
-            </p>
+
+            <p>{workout.weight}kg × {workout.reps} reps × {workout.sets} sets</p>
             <p>Volume: {workout.volume.toLocaleString()}kg</p>
+
+            {workout.isPR && (
+              <div style={{ color: "green", fontWeight: "bold" }}>
+                <p>
+                  {workout.previousMax === 0
+                    ? `🏆 First ${workout.lift} PR: ${workout.weight}kg`
+                    : `🏆 New PR: ${workout.previousMax}kg → ${workout.weight}kg (+${workout.improvement}kg / ${workout.improvementPercent.toFixed(1)}%)`}
+                </p>
+
+                <p>Next target: {workout.nextTarget}kg</p>
+              </div>
+            )}
           </div>
         ))}
       </div>

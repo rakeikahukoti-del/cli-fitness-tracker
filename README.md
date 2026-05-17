@@ -121,3 +121,23 @@ Supported lifts:
 - Conditional rendering
 - List rendering with map
 - Basic derived state
+
+## Week 5 Features
+
+### PR Detection Logic
+
+- Added personal record detection
+- Added previous max comparison
+- Added PR badges
+- Added PR improvement amount
+- Added PR improvement percentage
+- Added next target suggestions
+
+### Logic Concepts Used
+
+- Filtering arrays
+- Calculating max values
+- Conditional rendering
+- Derived state
+- Comparison logic
+- Edge-case testing
