@@ -1,7 +1,6 @@
-import sqlite3
-
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+import sqlite3
 
 app = Flask(__name__)
 CORS(app)
@@ -40,6 +39,37 @@ def get_workouts():
 
     return jsonify(workouts)
 
+@app.route("/workouts", methods=["POST"])
+def add_workout():
+    data = request.get_json()
+
+    date = data["date"]
+    lift = data["lift"]
+    weight = int(data["weight"])
+    reps = int(data["reps"])
+    sets = int(data["sets"])
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO workouts (date, lift, weight, reps, sets)
+        VALUES (?, ?, ?, ?, ?)
+    """, (date, lift, weight, reps, sets))
+
+    conn.commit()
+    workout_id = cursor.lastrowid
+    conn.close()
+
+    return jsonify({
+        "id": workout_id,
+        "date": date,
+        "lift": lift,
+        "weight": weight,
+        "reps": reps,
+        "sets": sets,
+        "volume": weight * reps * sets
+    }), 201
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,6 +1,5 @@
-backend/venv/
+venv/
 frontend/node_modules/
-__pycache__/
-*.pyc
-.DS_Store
 data/fitness_tracker.db
+__pycache__/
+.DS_Store
