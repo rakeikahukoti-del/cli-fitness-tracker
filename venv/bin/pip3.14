@@ -1,4 +1,4 @@
-#!/Users/rakeipaul/Documents/Python/venv/bin/python3.14
+#!/Users/rakeipaul/Downloads/Projects/Python-Projects/solo_project/venv/bin/python3.14
 import sys
 from pip._internal.cli.main import main
 if __name__ == '__main__':
