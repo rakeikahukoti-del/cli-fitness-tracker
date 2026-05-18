@@ -141,3 +141,23 @@ Supported lifts:
 - Derived state
 - Comparison logic
 - Edge-case testing
+
+## Week 6 Features
+
+### Full-Stack Integration
+
+- Added Flask backend API
+- Added GET `/workouts` endpoint
+- Added POST `/workouts` endpoint
+- Connected React frontend to Flask backend
+- Connected backend to SQLite database
+- Added persistent workout storage
+- Added loading and error states
+
+### Architecture
+
+React Frontend
+↓
+Flask API
+↓
+SQLite Database

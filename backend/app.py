@@ -79,6 +79,19 @@ def add_workout():
         "volume": weight * reps * sets
     }), 201
 
+@app.route("/workouts", methods=["DELETE"])
+def reset_workouts():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM workouts")
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "message": "All workouts deleted"
+    })
 
 if __name__ == "__main__":
     app.run(debug=True, port=5050)

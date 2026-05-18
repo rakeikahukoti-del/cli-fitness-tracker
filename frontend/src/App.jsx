@@ -4,27 +4,37 @@ import WorkoutList from "./components/WorkoutList"
 import SummaryCard from "./components/SummaryCard"
 import "./App.css"
 
+const API_URL = "http://localhost:5050"
 
 function App() {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
   const [workouts, setWorkouts] = useState([])
   const [selectedLift, setSelectedLift] = useState("all")
 
   async function fetchWorkouts() {
+    setLoading(true)
+    setError("")
+
     try {
-      const response = await fetch("http://localhost:5050/workouts")
+      const response = await fetch(`${API_URL}/workouts`)
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch workouts")
+      }
+
       const data = await response.json()
+      const workoutsWithPR = addPRData(data)
 
-      console.log("Fetched workouts:", data)
-
-      setWorkouts(data)
+      setWorkouts(workoutsWithPR)
     } catch (error) {
+      setError("Could not load workouts. Make sure backend is running.")
       console.log("Error fetching workouts:", error)
+    } finally {
+      setLoading(false)
     }
   }
-
-  useEffect(() => {
-    fetchWorkouts()
-  }, [])
 
   function getPreviousMax(lift) {
     const liftWorkouts = workouts.filter(
@@ -41,14 +51,58 @@ function App() {
   }
 
   function getNextTarget(lift, weight) {
-    if (lift === "bench press") return weight + 2.5
-    if (lift === "squat") return weight + 5
-    if (lift === "deadlift") return weight + 5
+    if (lift === "bench press") {
+      return weight + 2.5
+    }
+
+    if (lift === "squat") {
+      return weight + 5
+    }
+
+    if (lift === "deadlift") {
+      return weight + 5
+    }
 
     return weight + 2.5
   }
 
-  function addWorkout(newWorkout) {
+  function addPRData(workoutsData) {
+    const maxes = {}
+
+    return workoutsData.map(workout => {
+      const previousMax = maxes[workout.lift] || 0
+
+      const isPR = workout.weight > previousMax
+
+      const improvement = isPR
+        ? workout.weight - previousMax
+        : 0
+
+      const improvementPercent =
+        isPR && previousMax > 0
+          ? (improvement / previousMax) * 100
+          : 0
+
+      const nextTarget = isPR
+        ? getNextTarget(workout.lift, workout.weight)
+        : null
+
+      if (workout.weight > previousMax) {
+        maxes[workout.lift] = workout.weight
+      }
+
+      return {
+        ...workout,
+        isPR,
+        previousMax,
+        improvement,
+        improvementPercent,
+        nextTarget
+      }
+    })
+  }
+
+  async function addWorkout(newWorkout) {
     const previousMax = getPreviousMax(newWorkout.lift)
     const isPR = newWorkout.weight > previousMax
 
@@ -63,7 +117,7 @@ function App() {
       ? getNextTarget(newWorkout.lift, newWorkout.weight)
       : null
 
-    const workoutWithPR = {
+    const workoutToSave = {
       ...newWorkout,
       isPR,
       previousMax,
@@ -72,8 +126,64 @@ function App() {
       nextTarget
     }
 
-    setWorkouts([...workouts, workoutWithPR])
+    try {
+      const response = await fetch(`${API_URL}/workouts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(workoutToSave)
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to save workout")
+      }
+
+      const savedWorkout = await response.json()
+
+      const savedWorkoutWithPR = {
+        ...savedWorkout,
+        isPR,
+        previousMax,
+        improvement,
+        improvementPercent,
+        nextTarget
+      }
+
+      setWorkouts([...workouts, savedWorkoutWithPR])
+    } catch (error) {
+      setError("Could not save workout. Make sure backend is running.")
+      console.log("Error saving workout:", error)
+    }
   }
+
+  async function resetWorkouts() {
+    const confirmReset = window.confirm(
+      "Are you sure you want to delete all workouts?"
+    )
+
+    if (!confirmReset) {
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/workouts`, {
+        method: "DELETE"
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to reset workouts")
+      }
+
+      setWorkouts([])
+    } catch (error) {
+      console.log("Error resetting workouts:", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchWorkouts()
+  }, [])
 
   const totalSessions = workouts.length
 
@@ -96,6 +206,14 @@ function App() {
     <div style={{ padding: "2rem", fontFamily: "Arial"}}>
       <h1>Fitness Tracker</h1>
 
+      {loading && <p>Loading workouts...</p>}
+
+      {error && (
+        <p style={{ color: "red", fontWeight: "bold" }}>
+          {error}
+        </p>
+      )}
+      
       <div
         style={{
           display: "flex",
@@ -131,6 +249,9 @@ function App() {
       </div>
 
       <p>Showing: {selectedLift === "all" ? "All Workouts" : selectedLift}</p>
+      <button onClick={resetWorkouts}>
+        Reset All Workouts
+      </button>
       <WorkoutList workouts={filteredWorkouts} />
     </div>
   )

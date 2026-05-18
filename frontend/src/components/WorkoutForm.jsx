@@ -21,13 +21,36 @@ function WorkoutForm({ onAddWorkout }) {
   function handleSubmit(event) {
     event.preventDefault()
 
+    if (
+      formData.date === "" ||
+      formData.lift === "" ||
+      formData.weight === "" ||
+      formData.reps === "" ||
+      formData.sets === ""
+    ) {
+      alert("Please fill in all fields.")
+      return
+    }
+
+    if (
+      Number(formData.weight) <= 0 ||
+      Number(formData.reps) <= 0 ||
+      Number(formData.sets) <= 0
+    ) {
+      alert("Weight, reps, and sets must be greater than 0.")
+      return
+    }
+
     onAddWorkout({
-        ...formData,
-        weight: Number(formData.weight),
-        reps: Number(formData.reps),
-        sets: Number(formData.sets),
-        volume: Number(formData.weight) * Number(formData.reps) * Number(formData.sets)
-        })
+      ...formData,
+      weight: Number(formData.weight),
+      reps: Number(formData.reps),
+      sets: Number(formData.sets),
+      volume:
+        Number(formData.weight) *
+        Number(formData.reps) *
+        Number(formData.sets)
+    })
 
     setFormData({
       date: "",
@@ -50,7 +73,7 @@ function WorkoutForm({ onAddWorkout }) {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
-                style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+                required
                 />
             </div>
 
@@ -60,7 +83,7 @@ function WorkoutForm({ onAddWorkout }) {
                 name="lift"
                 value={formData.lift}
                 onChange={handleChange}
-                style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+                required
                 >
                 <option value="bench press">Bench Press</option>
                 <option value="squat">Squat</option>
@@ -75,7 +98,8 @@ function WorkoutForm({ onAddWorkout }) {
                 name="weight"
                 value={formData.weight}
                 onChange={handleChange}
-                style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+                required
+                min="1"
                 />
             </div>
 
@@ -86,7 +110,8 @@ function WorkoutForm({ onAddWorkout }) {
                 name="reps"
                 value={formData.reps}
                 onChange={handleChange}
-                style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+                required
+                min="1"
                 />
             </div>
 
@@ -97,7 +122,8 @@ function WorkoutForm({ onAddWorkout }) {
                 name="sets"
                 value={formData.sets}
                 onChange={handleChange}
-                style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+                required
+                min="1"
                 />
             </div>
 
