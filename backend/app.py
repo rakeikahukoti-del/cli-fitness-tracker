@@ -5,8 +5,17 @@ import sqlite3
 app = Flask(__name__)
 CORS(app)
 
+DB_PATH = "../data/fitness_tracker.db"
+
+
 def get_connection():
-    return sqlite3.connect("../data/fitness_tracker.db")
+    return sqlite3.connect(DB_PATH)
+
+
+@app.route("/")
+def home():
+    return jsonify({"message": "Fitness Tracker API running"})
+
 
 @app.route("/workouts", methods=["GET"])
 def get_workouts():
@@ -25,7 +34,7 @@ def get_workouts():
     workouts = []
 
     for row in rows:
-        workout = {
+        workouts.append({
             "id": row[0],
             "date": row[1],
             "lift": row[2],
@@ -33,11 +42,10 @@ def get_workouts():
             "reps": row[4],
             "sets": row[5],
             "volume": row[3] * row[4] * row[5]
-        }
-
-        workouts.append(workout)
+        })
 
     return jsonify(workouts)
+
 
 @app.route("/workouts", methods=["POST"])
 def add_workout():
@@ -71,5 +79,6 @@ def add_workout():
         "volume": weight * reps * sets
     }), 201
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5050)

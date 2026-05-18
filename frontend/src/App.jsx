@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import WorkoutForm from "./components/WorkoutForm"
 import WorkoutList from "./components/WorkoutList"
 import SummaryCard from "./components/SummaryCard"
@@ -7,8 +7,24 @@ import "./App.css"
 
 function App() {
   const [workouts, setWorkouts] = useState([])
-
   const [selectedLift, setSelectedLift] = useState("all")
+
+  async function fetchWorkouts() {
+    try {
+      const response = await fetch("http://localhost:5050/workouts")
+      const data = await response.json()
+
+      console.log("Fetched workouts:", data)
+
+      setWorkouts(data)
+    } catch (error) {
+      console.log("Error fetching workouts:", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchWorkouts()
+  }, [])
 
   function getPreviousMax(lift) {
     const liftWorkouts = workouts.filter(
