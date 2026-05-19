@@ -61,78 +61,90 @@ function WorkoutForm({ onAddWorkout }) {
     })
   }
 
+  const inputStyle = {
+    padding: "0.75rem",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    width: "100%",
+    boxSizing: "border-box"
+  }
+
+  const buttonStyle = {
+    padding: "0.75rem",
+    borderRadius: "8px",
+    border: "none",
+    cursor: "pointer"
+  }
+
   return (
     <form onSubmit={handleSubmit} style={{ marginBottom: "2rem" }}>
-        <h2>Add Workout</h2>
+      <h2>Add Workout</h2>
 
-        <div style={{ display: "grid", gap: "1rem", maxWidth: "400px" }}>
-            <div>
-                <label>Date:    </label>
-                <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-                />
-            </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          width: "300px"
+        }}
+      >
+        <input
+          type="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
 
-            <div>
-                <label>Lift:    </label>
-                <select
-                name="lift"
-                value={formData.lift}
-                onChange={handleChange}
-                required
-                >
-                <option value="bench press">Bench Press</option>
-                <option value="squat">Squat</option>
-                <option value="deadlift">Deadlift</option>
-                </select>
-            </div>
+        <select
+          name="lift"
+          value={formData.lift}
+          onChange={handleChange}
+          style={inputStyle}
+        >
+          <option value="bench press">Bench Press</option>
+          <option value="squat">Squat</option>
+          <option value="deadlift">Deadlift</option>
+        </select>
 
-            <div>
-                <label>Weight:  </label>
-                <input
-                type="float"
-                name="weight"
-                value={formData.weight}
-                onChange={handleChange}
-                required
-                min="1"
-                />
-            </div>
+        <input
+          type="number"
+          name="weight"
+          placeholder="Weight"
+          value={formData.weight}
+          onChange={handleChange}
+          required
+          min="1"
+          style={inputStyle}
+        />
 
-            <div>
-                <label>Reps:    </label>
-                <input
-                type="number"
-                name="reps"
-                value={formData.reps}
-                onChange={handleChange}
-                required
-                min="1"
-                />
-            </div>
+        <input
+          type="number"
+          name="reps"
+          placeholder="Reps"
+          value={formData.reps}
+          onChange={handleChange}
+          required
+          min="1"
+          style={inputStyle}
+        />
 
-            <div>
-                <label>Sets:    </label>
-                <input
-                type="number"
-                name="sets"
-                value={formData.sets}
-                onChange={handleChange}
-                required
-                min="1"
-                />
-            </div>
+        <input
+          type="number"
+          name="sets"
+          placeholder="Sets"
+          value={formData.sets}
+          onChange={handleChange}
+          required
+          min="1"
+          style={inputStyle}
+        />
 
-        </div>
-        
-
-        <button type="submit" style={{ marginTop: "1rem" }}>
-            Save Workout
+        <button type="submit" style={buttonStyle}>
+          Save Workout
         </button>
+      </div>
     </form>
   )
 }

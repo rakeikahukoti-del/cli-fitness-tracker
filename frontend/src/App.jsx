@@ -202,57 +202,104 @@ function App() {
       ? workouts
       : workouts.filter(workout => workout.lift === selectedLift)
 
+  const buttonStyle = {
+    padding: "0.75rem 1rem",
+    borderRadius: "10px",
+    border: "1px solid #374151",
+    backgroundColor: "#1f2937",
+    color: "#f9fafb",
+    cursor: "pointer",
+    fontWeight: "600"
+  }
+
+
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial"}}>
-      <h1>Fitness Tracker</h1>
-
-      {loading && <p>Loading workouts...</p>}
-
-      {error && (
-        <p style={{ color: "red", fontWeight: "bold" }}>
-          {error}
-        </p>
-      )}
-      
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#1b202c",
+        color: "#f9fafb",
+        padding: "2rem",
+        fontFamily: "Arial, sans-serif"
+      }}
+    >
       <div
         style={{
-          display: "flex",
-          gap: "1rem",
-          marginBottom: "2rem"
+          padding: "1.5rem 2rem",
+          fontFamily: "Arial",
+          width: "100%",
+          boxSizing: "border-box"
         }}
       >
-        <SummaryCard
-          title="Total Sessions"
-          value={totalSessions}
-        />
+        <h1
+          style={{
+            fontSize: "2.5rem",
+            marginBottom: "0.5rem"
+          }}
+        >
+          Fitness Tracker
+        </h1>
 
-        <SummaryCard
-          title="Total Volume"
-          value={`${totalVolume.toLocaleString()}kg`}
-        />
+        <p style={{color: "#9ca3af",marginBottom: "2rem"}}>
+          Track workouts, monitor volume, and detect personal records
+        </p>
 
-        <SummaryCard
-          title="Max Lift"
-          value={`${maxLift}kg`}
-        />
-      </div>
+        {loading && <p>Loading workouts...</p>}
 
-      <WorkoutForm onAddWorkout={addWorkout} />
+        {error && (
+          <p style={{ color: "red", fontWeight: "bold" }}>
+            {error}
+          </p>
+        )}
+        
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "1.5rem",
+            marginBottom: "3rem",
+            width: "100%"
+          }}
+        >
+          <SummaryCard
+            title="Total Sessions"
+            value={totalSessions}
+          />
 
-      <div style={{ marginBottom: "1rem" }}>
+          <SummaryCard
+            title="Total Volume"
+            value={`${totalVolume.toLocaleString()}kg`}
+          />
+
+          <SummaryCard
+            title="Max Lift"
+            value={`${maxLift}kg`}
+          />
+        </div>
+
+        <WorkoutForm onAddWorkout={addWorkout} />
+
         <h2>Filter Workouts</h2>
 
-        <button onClick={() => setSelectedLift("all") }>All</button>
-        <button onClick={() => setSelectedLift("bench press")}>Bench Press</button>
-        <button onClick={() => setSelectedLift("squat")}>Squat</button>
-        <button onClick={() => setSelectedLift("deadlift")}>Deadlift</button>
-      </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "1rem",
+            marginBottom: "1.5rem",
+            flexWrap: "wrap"
+          }}
+        >
+          <button style={buttonStyle} onClick={() => setSelectedLift("all")}>All</button>
+          <button style={buttonStyle} onClick={() => setSelectedLift("bench press")}>Bench Press</button>
+          <button style={buttonStyle} onClick={() => setSelectedLift("squat")}>Squat</button>
+          <button style={buttonStyle} onClick={() => setSelectedLift("deadlift")}>Deadlift</button>
+        </div>
 
-      <p>Showing: {selectedLift === "all" ? "All Workouts" : selectedLift}</p>
-      <button onClick={resetWorkouts}>
-        Reset All Workouts
-      </button>
-      <WorkoutList workouts={filteredWorkouts} />
+        <p>Showing: {selectedLift === "all" ? "All Workouts" : selectedLift}</p>
+        <button style={buttonStyle} onClick={resetWorkouts}>Reset All Workouts</button>
+
+        <WorkoutList workouts={filteredWorkouts} />
+      </div>
     </div>
   )
 }

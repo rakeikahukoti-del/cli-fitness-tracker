@@ -1,39 +1,100 @@
 function WorkoutList({ workouts }) {
   if (workouts.length === 0) {
-    return <p>No workouts logged yet.</p>
+    return (
+      <p style={{ color: "#d1d5db" }}>
+        No workouts logged yet.
+      </p>
+    )
   }
 
   return (
     <div>
-      <h2>Previous Workouts</h2>
+      <h2
+        style={{
+          color: "#f9fafb",
+          marginBottom: "1rem"
+        }}
+      >
+        Previous Workouts
+      </h2>
 
-      <div style={{ display: "grid", gap: "1rem" }}>
+      <div
+        style={{
+          display: "grid",
+          gap: "1rem"
+        }}
+      >
         {workouts.map((workout, index) => (
           <div
             key={index}
             style={{
+              backgroundColor: "#1f2937",
               border: workout.isPR
-                ? "2px solid green"
-                : "1px solid #ddd",
-              padding: "1rem",
-              borderRadius: "10px"
+                ? "1px solid #22c55e"
+                : "1px solid #374151",
+              padding: "1.5rem",
+              borderRadius: "12px"
             }}
           >
-            <h3>{workout.lift}</h3>
-            <p>Date: {workout.date}</p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "0.75rem"
+              }}
+            >
+              <h3
+                style={{
+                  margin: 0,
+                  color: "#f9fafb",
+                  textTransform: "capitalize"
+                }}
+              >
+                {workout.lift}
+              </h3>
 
-            <p>{workout.weight}kg × {workout.reps} reps × {workout.sets} sets</p>
-            <p>Volume: {workout.volume.toLocaleString()}kg</p>
+              {workout.isPR && (
+                <span
+                  style={{
+                    color: "#22c55e",
+                    fontWeight: "bold",
+                    fontSize: "1rem"
+                  }}
+                >
+                  🏆 PR
+                </span>
+              )}
+            </div>
+
+            <p style={textStyle}>
+              Date: {workout.date}
+            </p>
+
+            <p style={textStyle}>
+              {workout.weight}kg × {workout.reps} reps × {workout.sets} sets
+            </p>
+
+            <p style={textStyle}>
+              Volume: {workout.volume.toLocaleString()}kg
+            </p>
 
             {workout.isPR && (
-              <div style={{ color: "green", fontWeight: "bold" }}>
-                <p>
+              <div
+                style={{
+                  marginTop: "1rem",
+                  color: "#22c55e"
+                }}
+              >
+                <p style={{ margin: 0 }}>
                   {workout.previousMax === 0
-                    ? `🏆 First ${workout.lift} PR: ${workout.weight}kg`
-                    : `🏆 New PR: ${workout.previousMax}kg → ${workout.weight}kg (+${workout.improvement}kg / ${workout.improvementPercent.toFixed(1)}%)`}
+                    ? `First ${workout.lift} PR`
+                    : `+${workout.improvement}kg (${workout.improvementPercent.toFixed(1)}%)`}
                 </p>
 
-                <p>Next target: {workout.nextTarget}kg</p>
+                <p style={{ marginTop: "0.35rem" }}>
+                  Next target: {workout.nextTarget}kg
+                </p>
               </div>
             )}
           </div>
@@ -41,6 +102,13 @@ function WorkoutList({ workouts }) {
       </div>
     </div>
   )
+}
+
+const textStyle = {
+  color: "#e5e7eb",
+  margin: "0.6rem 0",
+  fontWeight: "600",
+  lineHeight: "1.5"
 }
 
 export default WorkoutList
