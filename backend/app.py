@@ -1,15 +1,36 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import os
 import sqlite3
 
 app = Flask(__name__)
 CORS(app)
 
 DB_PATH = "../data/fitness_tracker.db"
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 
 def get_connection():
     return sqlite3.connect(DB_PATH)
+
+
+def init_db():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS workouts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT,
+            lift TEXT,
+            weight INTEGER,
+            reps INTEGER,
+            sets INTEGER
+        )
+    """)
+
+    conn.commit()
+    conn.close()
 
 
 @app.route("/")
@@ -92,6 +113,8 @@ def reset_workouts():
     return jsonify({
         "message": "All workouts deleted"
     })
+
+init_db()
 
 if __name__ == "__main__":
     app.run(debug=True, port=5050)
