@@ -99,7 +99,9 @@ The goal was to build one project deeply instead of creating several shallow tut
 
 ```bash
 cd backend
+python3 -m venv ../venv
 source ../venv/bin/activate
+pip install -r requirements.txt
 python app.py
 ```
 
@@ -155,6 +157,11 @@ This project helped me learn:
 - Async JavaScript
 - CRUD operations
 - Project structuring
+
+
+## License
+
+MIT — see [LICENSE](LICENSE).
 
 
 ## Final Notes
